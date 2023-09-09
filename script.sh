@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Aktualizacja i instalacja wymaganych pakietów
-sudo apt update && sudo apt upgrade -y && sudo apt install -y nginx software-properties-common mysql-server phpmyadmin certbot python3-certbot-nginx
-
-# Dodanie repozytorium PHP i instalacja PHP 8.2.10
-sudo add-apt-repository ppa:ondrej/php -y && sudo apt update && sudo apt install -y php8.2 php8.2-fpm php8.2-mysql php8.2-mbstring php8.2-xml php8.2-zip
+sudo apt update && sudo apt upgrade -y && sudo apt install -y nginx software-properties-common mysql-server phpmyadmin certbot python3-certbot-nginx && sudo add-apt-repository ppa:ondrej/php -y && sudo apt update && sudo apt install -y php8.2 php8.2-fpm php8.2-mysql php8.2-mbstring php8.2-xml php8.2-zip && sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab
 
 # Generowanie haseł i loginów
 generate_password() { openssl rand -base64 64 | tr -dc 'a-zA-Z0-9!@#$%^&*()-+=' | fold -w $(shuf -i $1-$2 -n 1) | head -n 1; }
@@ -46,8 +43,5 @@ echo -n "admin:$PHPMYADMIN_PASSWORD" | sudo tee /etc/nginx/pma_pass
 
 # Instalacja certyfikatu SSL
 sudo certbot --nginx -d cyberwojtek.com -d www.cyberwojtek.com
-
-# Tworzenie 2GB swapu
-sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab
 
 echo "Instalacja zakończona pomyślnie!"
